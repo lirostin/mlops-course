@@ -55,6 +55,8 @@ check_new_version_uv:
 lint:
 	uv run ruff check prediction.py
 	uv run ruff check prediction.py --fix
+	uv run ruff check train.py
+	uv run ruff check train.py --fix
 
 activate_hooks:
 	pre-commit install 
