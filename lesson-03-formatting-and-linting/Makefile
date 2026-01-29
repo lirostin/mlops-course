@@ -35,6 +35,7 @@ init_uv:
 init_dev:
 	uv add --group dev pip-audit
 	uv add --dev ruff
+	uv pip install pre-commit
 
 init_full: init_uv init_dev
 
@@ -54,3 +55,6 @@ check_new_version_uv:
 lint:
 	uv run ruff check prediction.py
 	uv run ruff check prediction.py --fix
+
+activate_hooks:
+	pre-commit install 
