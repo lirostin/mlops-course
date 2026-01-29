@@ -10,3 +10,9 @@ dependencies = [
   "joblib==1.5.3",
   "scikit-learn==1.8.0",
 ]
+
+[dependency-groups]
+dev = [
+    "pip-audit>=2.10.0",
+    "ruff>=0.14.14",
+]

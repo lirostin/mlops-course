@@ -1,10 +1,7 @@
 # Этот файл принимает на вход новые данные и делает предсказание стоимости
-import os,sys
 
-import pandas as pd,numpy as np
-
-import joblib # для загрузки модели
-from sklearn.ensemble import GradientBoostingRegressor
+import joblib  # для загрузки модели
+import pandas as pd
 
 # Модель была предварительно обучена и сохранена в model.joblib
 
