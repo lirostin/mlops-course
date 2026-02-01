@@ -11,8 +11,9 @@ def calculate_precision(y_pred: np.ndarray, y_true: np.ndarray) -> float:
     precision = tp / (tp + fp)
     return float(precision)
 
+
 y_true = np.array([1, 1, 1, 1, 0, 1])
 y_pred = np.array([1, 0, 1, 0, 1, 0])
 
-precision : float = calculate_precision(y_pred, y_true)
+precision: float = calculate_precision(y_pred, y_true)
 print(f"Precision: {precision:.2f}")

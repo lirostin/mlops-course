@@ -86,7 +86,6 @@ lint.select = [
     "SLF",  # flake8-self
     "SIM",  # flake8-simplify
     "ARG",  # flake8-unused-arguments
-    "TC",  # flake8-type-checking
     "FLY",  # flynt
 ]
 lint.ignore = [
