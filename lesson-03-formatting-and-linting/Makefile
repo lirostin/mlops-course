@@ -53,6 +53,10 @@ check_new_version_uv:
 	uv pip list --outdated
 	uv run pip-audit || true
 
+lint_task:
+	uv run ruff check task.py --fix --show-fixes
+	uv run mypy task.py
+
 lint:
 	uv run ruff check prediction.py train.py --fix --show-fixes
 	uv run mypy prediction.py train.py
