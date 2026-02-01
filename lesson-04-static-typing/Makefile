@@ -57,6 +57,7 @@ check_new_version_uv:
 
 
 lint:
+	uv run ruff format *.py
 	uv run ruff check *.py --fix --show-fixes
 	uv run mypy *.py
 

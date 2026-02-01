@@ -1,63 +1,66 @@
 import json
 import pickle
-from typing import Any, Dict, Optional, Tuple
+from typing import Tuple, cast
 
 import pandas as pd
+from config import MainConfig, ModelConfig
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
 
 
-def load_config() -> Dict[str, Any]:
+def load_config() -> dict[str, str]:
     with open("config.json") as f:
-        return json.load(f)  # type: ignore[no-any-return]
+        return cast(dict[str, str], json.load(f))
 
 
-def load_data(path: str) -> Optional[pd.DataFrame]:
+def load_data(path: str) -> pd.DataFrame:
     try:
         return pd.read_csv(path)
-    except FileNotFoundError:
-        return None
+    except FileNotFoundError as ex:
+        raise ex
 
 
 def preprocess(
-    data: Optional[pd.DataFrame], config: dict[str, Any]
-) -> Tuple[Optional[pd.DataFrame], Optional[pd.Series]]:
+    data: pd.DataFrame, config: MainConfig
+) -> Tuple[pd.DataFrame, pd.Series]:
     if data is None:
-        return None, None
+        raise ValueError("Input data is None. Cannot preprocess data.")
     data = data.dropna()
-    X = data[config["features"]]
-    y = data[config["target_column"]]
+    X = data[config.features]
+    y = data[config.target_column]
     return X, y
 
 
 def train(
-    X: Optional[pd.DataFrame], y: Optional[pd.Series], params: dict[str, Any]
-) -> Optional[RandomForestRegressor]:
+    X: pd.DataFrame, y: pd.Series, params: ModelConfig
+) -> RandomForestRegressor:
     if X is None or y is None:
-        return None
-    model = RandomForestRegressor(**params)
+        raise ValueError("Input data is None. Cannot train model.")
+    model = RandomForestRegressor(**params.dict())
     model.fit(X, y)
     return model
 
 
-def save_model(model: Optional[RandomForestRegressor], path: str) -> None:
+def save_model(model: RandomForestRegressor, path: str) -> None:
     if model is not None:
         with open(path, "wb") as f:
             pickle.dump(model, f)
 
 
 def main() -> None:
-    config = load_config()
-    data = load_data(config["data_path"])
-    X, y = preprocess(data, config)
+    config: dict[str, str] = load_config()
 
-    if X is not None and y is not None:
-        X_train, _, y_train, _ = train_test_split(
-            X, y, random_state=config["model_params"]["random_state"]
-        )
-        model = train(X_train, y_train, config["model_params"])
-        save_model(model, config["output_path"])
-        print("Model saved successfully")
+    data_cfg = MainConfig(**config)  # type: ignore
+    model_cfg = ModelConfig(**config["model_params"])  # type: ignore
+    data = load_data(data_cfg.data_path)
+    X, y = preprocess(data, data_cfg)
+
+    X_train, _, y_train, _ = train_test_split(
+        X, y, random_state=model_cfg.random_state
+    )
+    model = train(X_train, y_train, model_cfg)
+    save_model(model, data_cfg.output_path)
+    print("Model saved successfully")
 
 
 if __name__ == "__main__":
