@@ -36,6 +36,7 @@ init_dev:
 	uv add --group dev pip-audit
 	uv add --dev ruff
 	uv pip install pre-commit
+	uv add --dev mypy==1.19.1
 
 init_full: init_uv init_dev
 
@@ -53,10 +54,8 @@ check_new_version_uv:
 	uv run pip-audit || true
 
 lint:
-	uv run ruff check prediction.py
-	uv run ruff check prediction.py --fix
-	uv run ruff check train.py
-	uv run ruff check train.py --fix
+	uv run ruff check prediction.py train.py --fix --show-fixes
+	uv run mypy prediction.py train.py
 
 activate_hooks:
 	pre-commit install 
