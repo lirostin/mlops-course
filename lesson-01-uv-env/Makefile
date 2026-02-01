@@ -60,4 +60,4 @@ lint:
 	uv run mypy *.py
 
 activate_hooks:
-	pre-commit install 
+	$(ACTIVATE_MAC); pre-commit install 
